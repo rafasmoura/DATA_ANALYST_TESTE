@@ -1,0 +1,45 @@
+-- Questão 1 - 
+
+Letra a)
+
+SELECT
+    s.name AS school_name,
+    st.enrolled_at::date AS enrollment_date,
+    COUNT(*) AS qtd_alunos,
+    SUM(c.price) AS total_matriculas
+FROM students st
+JOIN courses c ON st.course_id = c.id
+JOIN schools s ON c.school_id = s.id
+WHERE LOWER(c.name) LIKE 'data%'  -- cursos que começam com "data"
+GROUP BY s.name, st.enrolled_at
+ORDER BY st.enrolled_at DESC
+
+-- Letra B
+
+WITH matriculas_diarias AS (
+    SELECT
+        s.name AS school_name,
+        st.enrolled_at::date AS enrollment_date,
+        COUNT(*) AS qtd_alunos
+    FROM students st
+    JOIN courses c ON st.course_id = c.id
+    JOIN schools s ON c.school_id = s.id
+    WHERE LOWER(c.name) LIKE 'data%'
+    GROUP BY s.name, st.enrolled_at
+)
+
+SELECT
+    school_name,
+    enrollment_date,
+    qtd_alunos,
+    SUM(qtd_alunos) OVER (PARTITION BY school_name ORDER BY enrollment_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS soma_acumulada,
+    ROUND(AVG(qtd_alunos) OVER (PARTITION BY school_name ORDER BY enrollment_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS media_movel_7d,
+    ROUND(AVG(qtd_alunos) OVER (PARTITION BY school_name ORDER BY enrollment_date ROWS BETWEEN 29 PRECEDING AND CURRENT ROW), 2) AS media_movel_30d
+FROM matriculas_diarias
+ORDER BY school_name, enrollment_date DESC
+
+
+
+
+
+
