@@ -10,9 +10,9 @@ SELECT
 FROM students st
 JOIN courses c ON st.course_id = c.id
 JOIN schools s ON c.school_id = s.id
-WHERE LOWER(c.name) LIKE 'data%'  -- cursos que começam com "data"
+WHERE LOWER(c.name) LIKE 'data%'
 GROUP BY s.name, st.enrolled_at
-ORDER BY st.enrolled_at DESC
+ORDER BY st.enrolled_at DESC;
 
 -- Letra B
 
@@ -36,7 +36,7 @@ SELECT
     ROUND(AVG(qtd_alunos) OVER (PARTITION BY school_name ORDER BY enrollment_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW), 2) AS media_movel_7d,
     ROUND(AVG(qtd_alunos) OVER (PARTITION BY school_name ORDER BY enrollment_date ROWS BETWEEN 29 PRECEDING AND CURRENT ROW), 2) AS media_movel_30d
 FROM matriculas_diarias
-ORDER BY school_name, enrollment_date DESC
+ORDER BY school_name, enrollment_date DESC;
 
 
 
