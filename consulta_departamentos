@@ -1,0 +1,12 @@
+-- Questão 2
+
+SELECT
+    d.name AS nome_departamento,
+    COUNT(e.id) AS qtd_empregados,
+    ROUND(AVG(COALESCE(e.salary, 0)), 2) AS media_salarial,
+    MAX(COALESCE(e.salary, 0)) AS maior_salario,
+    MIN(COALESCE(e.salary, 0)) AS menor_salario
+FROM departments d
+LEFT JOIN employees e ON e.department_id = d.id
+GROUP BY d.name
+ORDER BY media_salarial DESC;
